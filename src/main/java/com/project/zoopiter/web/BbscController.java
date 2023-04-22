@@ -8,6 +8,7 @@ import com.project.zoopiter.domain.common.paging.FindCriteria;
 import com.project.zoopiter.domain.entity.Bbsc;
 import com.project.zoopiter.domain.entity.BbscReply;
 import com.project.zoopiter.domain.entity.UploadFile;
+import com.project.zoopiter.domain.member.svc.MemberSVC;
 import com.project.zoopiter.web.common.AttachFileType;
 import com.project.zoopiter.web.common.LoginMember;
 import com.project.zoopiter.web.form.bbsc.BbscDetailForm;
@@ -38,6 +39,7 @@ public class BbscController {
   private final BbscSVC bbscSVC;
   private final UploadFileSVC uploadFileSVC;
   private final BbscReplySVC bbscReplySVC;
+  private final MemberSVC memberSVC;
 
   @Autowired
   @Qualifier("fc10") //동일한 타입의 객체가 여러개있을때 빈이름을 명시적으로 지정해서 주입받을때
@@ -293,6 +295,19 @@ public class BbscController {
       }
       model.addAttribute("imagedFileMap", map);
 //      log.info("imagedFileMap={}", map);
+
+    //회원프로필 조회
+    // 게시글 회원닉네임들 list에 저장
+    List<String> userNickList = new ArrayList<>();
+    for(Bbsc bbsc : bbscList){
+      userNickList.add(bbsc.getUserNick());
+    }
+    for(String userNick : userNickList){
+      boolean existNick = memberSVC.isExistNick(userNick);
+      if(existNick == true){
+
+      }
+    }
 
       model.addAttribute("list",partOfList);
       model.addAttribute("fc",fc);
