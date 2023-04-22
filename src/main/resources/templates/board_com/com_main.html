@@ -93,10 +93,13 @@
                th:onclick="|location.href='@{/bbsc/{id}/detail(id=${Bbsc.bbscId})}'|">
             <div class="info">
               <div class="pro">
-                <div class="img">
-                  <!--  기본프로필 이미지 -->
-                  <i class="fa-solid fa-circle-user" style="color: #d1d1d1;"></i>
+                <div class="img" th:each="file : ${profiles}">
+                    <th:block th:if="${#strings.contains(file.ftype,'image')}">
+                      <img th:src="@{|/attach/view/${file.uploadfileId}|}">
+                    </th:block>
                 </div>
+                  <!--  기본프로필 이미지 -->
+                  <i th:unless="${profiles != null }" class="fa-solid fa-circle-user" style="color: #d1d1d1;"></i>
                 <div class="name">
                   <div th:text="${Bbsc.userNick}">작성자명</div>
                   <div id="re3" style="color: black; font-size: 12px" th:text="${Bbsc.bcUdate}">clock</div>

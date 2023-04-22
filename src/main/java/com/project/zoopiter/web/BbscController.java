@@ -7,6 +7,7 @@ import com.project.zoopiter.domain.common.file.svc.UploadFileSVC;
 import com.project.zoopiter.domain.common.paging.FindCriteria;
 import com.project.zoopiter.domain.entity.Bbsc;
 import com.project.zoopiter.domain.entity.BbscReply;
+import com.project.zoopiter.domain.entity.Member;
 import com.project.zoopiter.domain.entity.UploadFile;
 import com.project.zoopiter.domain.member.svc.MemberSVC;
 import com.project.zoopiter.web.common.AttachFileType;
@@ -302,10 +303,19 @@ public class BbscController {
     for(Bbsc bbsc : bbscList){
       userNickList.add(bbsc.getUserNick());
     }
-    for(String userNick : userNickList){
-     memberSVC.f(userNick);
-      if(existNick == true){
 
+    for(String userNick : userNickList){
+      // 게시글 닉네임으로 찾은 회원정보
+      Optional<Member> byUserNick = memberSVC.findByUserNick(userNick);
+      if(byUserNick.isPresent()){
+        // 찾은 회원정보에서 프로필 id(userPhoto)값 가져오기
+        Long userPhoto = byUserNick.get().getUserPhoto();
+        // userPhoto 값으로 프로필 사진 찾기
+        List<UploadFile> profiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F0104, userPhoto);
+
+        if(!profiles.isEmpty()){
+          model.addAttribute("profiles", profiles);
+        }
       }
     }
 
