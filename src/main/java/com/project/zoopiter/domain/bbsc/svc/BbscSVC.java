@@ -39,6 +39,13 @@ public interface BbscSVC {
    */
   List<Bbsc> findByFilter(BbscFilterCondition filterCondition);
 
+  /**
+   * 필터&펫태그 검색
+   * @param filterCondition
+   * @return
+   */
+  List<Bbsc> findByPetAndFilter(BbscFilterCondition filterCondition);
+
 
   /**
    * 조회

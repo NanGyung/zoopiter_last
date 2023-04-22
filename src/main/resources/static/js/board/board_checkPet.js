@@ -1,6 +1,6 @@
 // 동물 태그 체크박스 이벤트
 
-const $selectBox = document.getElementById('categories');
+const $categories = document.getElementById('categories');
 const $check = document.querySelectorAll('input[type="checkbox"]');
 
 let addBtn;
@@ -22,22 +22,27 @@ const checkbox_h = e => {
         addBtn.innerHTML = '전체 선택 해제';
         addBtn.setAttribute("id", "allBtn");
         $selectBox.appendChild(addBtn);
+
     } else if (checkedCnt === 0 || checkedCnt === $check.length + 1) {
-        $selectBox.removeChild(addBtn);
+        const $allBtn = document.getElementById("allBtn");
+        $categories.removeChild(addBtn);
     }
     // 전체 체크 해제 버튼
     const $allBtn = document.getElementById("allBtn");
-    $allBtn.addEventListener('click', e => {
-        e.preventDefault();
-        $check.forEach((checkedEle) => {
-            checkedEle.checked = false;
-        });
-        if (checkedCnt === 0) {
-            $selectBox.removeChild(addBtn);
-        }
-    }, false);
+    if($allBtn != null){
+        $allBtn.addEventListener('click', e => {
+            e.preventDefault();
+            $check.forEach((checkedEle) => {
+                checkedEle.checked = false;
+            });
+            if (checkedCnt === 0) {
+                $categories.removeChild(addBtn);
+            }
+        }, false);
+    }
 }
-
-$selectBox.addEventListener('change', checkbox_h, false);
+if($categories){
+    $categories.addEventListener('change', checkbox_h, false);
+}
 
 

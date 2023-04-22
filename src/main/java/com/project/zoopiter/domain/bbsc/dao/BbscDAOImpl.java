@@ -152,6 +152,27 @@ public class BbscDAOImpl implements BbscDAO{
     return list;
   }
 
+  /**
+   * 필터&펫태그 검색
+   *
+   * @param filterCondition
+   * @return
+   */
+  @Override
+  public List<Bbsc> findByPetAndFilter(BbscFilterCondition filterCondition) {
+    StringBuffer sql = new StringBuffer();
+    sql.append("select * from bbsc where pet_type in ( ");
+    sql = dynamicQuery1(filterCondition, sql);
+    sql.append(" order by ");
+    sql = dynamicQuery2(filterCondition, sql);
+
+    List<Bbsc> list = null;
+
+    list = template.query(sql.toString(),new BeanPropertyRowMapper<>(Bbsc.class));
+
+    return list;
+  }
+
   private StringBuffer dynamicQuery1(BbscFilterCondition filterCondition, StringBuffer sql){
     List<String> petTypes = filterCondition.getCategory();
 

@@ -36,6 +36,13 @@ public interface BbscDAO {
   List<Bbsc> findByFilter(BbscFilterCondition filterCondition);
 
   /**
+   * 필터&펫태그 검색
+   * @param filterCondition
+   * @return
+   */
+  List<Bbsc> findByPetAndFilter(BbscFilterCondition filterCondition);
+
+  /**
    * 상세조회
    * @param id 게시글 번호
    * @return

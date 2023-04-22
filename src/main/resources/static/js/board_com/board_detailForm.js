@@ -62,7 +62,7 @@ $addBtn.addEventListener('click',add_h,false);
 //댓글 등록취소
 $cancelBtn.addEventListener('click',e => {
    $ccContent.disabled == true;
-    $ccContent.textContent = '';
+    $ccContent.value = '';
 },false);
 
 //댓글 삭제버튼

@@ -182,6 +182,17 @@ public class BbscSVCImpl implements BbscSVC{
   }
 
   /**
+   * 필터&펫태그 검색
+   *
+   * @param filterCondition
+   * @return
+   */
+  @Override
+  public List<Bbsc> findByPetAndFilter(BbscFilterCondition filterCondition) {
+    return bbscDAO.findByPetAndFilter(filterCondition);
+  }
+
+  /**
    * 전체건수
    *
    * @return 게시글 전체건수

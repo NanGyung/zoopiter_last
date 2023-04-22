@@ -222,6 +222,7 @@ public class BbscController {
     if(category.isPresent()){
       if(searchType.isPresent()){ //검색어 있음(필터-최신,조회), 펫태그
         arr = category.get();
+        log.info("arr={}",arr);
         log.info("searchType={}",searchType.get());
         BbscFilterCondition filterCondition = new BbscFilterCondition(
             arr, fc.getRc().getStartRec(), fc.getRc().getEndRec(),
@@ -230,7 +231,7 @@ public class BbscController {
 
         fc.setTotalRec(bbscSVC.totalCount(filterCondition));
         fc.setSearchType(searchType.get());
-        bbscList = bbscSVC.findByFilter(filterCondition);
+        bbscList = bbscSVC.findByPetAndFilter(filterCondition);
 
       }else{  // 펫태그 있고 셀렉트 박스 값 없을 때
         arr = category.get();
@@ -271,7 +272,8 @@ public class BbscController {
 
         partOfList.add(listForm);
       }
-      log.info("partOfList={}",partOfList);
+//      log.info("partOfList={}",partOfList);
+
 
 
     // 게시글 id 값들 list에 저장
@@ -285,12 +287,12 @@ public class BbscController {
       for (Long bbscId : bbscIdList) {
         List<UploadFile> imagedFiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F0102, bbscId);
         if (imagedFiles.size() > 0) {
-          log.info("ImagedFiles={}", imagedFiles);
+//          log.info("ImagedFiles={}", imagedFiles);
           map.put(bbscId,imagedFiles.get(0).getUploadfileId());
         }
       }
       model.addAttribute("imagedFileMap", map);
-      log.info("imagedFileMap={}", map);
+//      log.info("imagedFileMap={}", map);
 
       model.addAttribute("list",partOfList);
       model.addAttribute("fc",fc);
