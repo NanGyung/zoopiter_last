@@ -2,9 +2,11 @@ package com.project.zoopiter.web;
 
 import com.project.zoopiter.domain.bbsc.dao.BbscFilterCondition;
 import com.project.zoopiter.domain.bbsc.svc.BbscSVC;
+import com.project.zoopiter.domain.bbscReply.svc.BbscReplySVC;
 import com.project.zoopiter.domain.common.file.svc.UploadFileSVC;
 import com.project.zoopiter.domain.common.paging.FindCriteria;
 import com.project.zoopiter.domain.entity.Bbsc;
+import com.project.zoopiter.domain.entity.BbscReply;
 import com.project.zoopiter.domain.entity.UploadFile;
 import com.project.zoopiter.web.common.AttachFileType;
 import com.project.zoopiter.web.common.LoginMember;
@@ -35,6 +37,7 @@ import java.util.*;
 public class BbscController {
   private final BbscSVC bbscSVC;
   private final UploadFileSVC uploadFileSVC;
+  private final BbscReplySVC bbscReplySVC;
 
   @Autowired
   @Qualifier("fc10") //동일한 타입의 객체가 여러개있을때 빈이름을 명시적으로 지정해서 주입받을때
@@ -115,7 +118,14 @@ public class BbscController {
       log.info("ImagedFiles={}",imagedFiles);
       model.addAttribute("imagedFiles",imagedFiles);
     }
-//    bbscDetailForm.setImagedFiles(imagedFiles);
+
+    // 댓글 총갯수
+    int cntOfReplies = bbscReplySVC.countOfReplies(bbscId);
+    model.addAttribute("cntOfReplies",cntOfReplies);
+    // 댓글 조회
+    Optional<List<BbscReply>> bbscReplies = bbscReplySVC.findByBbscId(bbscId);
+    List<BbscReply> findedReplies = bbscReplies.get();
+    model.addAttribute("findedReplies",findedReplies);
 
     model.addAttribute("bbscDetailForm",bbscDetailForm);
     return "board_com/com_detailForm";
@@ -235,12 +245,11 @@ public class BbscController {
   public String listAndReqPage(
       @PathVariable(required = false) Optional<Integer> reqPage,
       @PathVariable(required = false) Optional<String> searchType,
-      @RequestParam(required = false) Optional<String[]> category,
+      @RequestParam(required = false) Optional<List<String>> category,
       Model model){
     log.info("/list 요청됨{},{},{}",reqPage,searchType,category);
 
-    String[] cate = getCategory(category);  // 펫태그 배열
-//    log.info("cate={}",cate);
+    List<String> cate = getCategory(category);  // 펫태그 배열
 
     //FindCriteria 값 설정
     fc.getRc().setReqPage(reqPage.orElse(1)); //요청페이지, 요청없으면 1
@@ -250,7 +259,7 @@ public class BbscController {
 
     // 게시물 목록 전체
     if(!category.isPresent()){
-      String[] arr = {};
+      List<String> arr = null;
 
       if(searchType.isPresent()){ //검색어 있음(필터-최신,조회)
         BbscFilterCondition filterCondition = new BbscFilterCondition(
@@ -263,7 +272,7 @@ public class BbscController {
         bbscList = bbscSVC.findByFilter(filterCondition);
 
       } else if (category.isPresent()) { //검색어 있음(펫태그)
-        arr = category.get();
+         arr = category.get();
 
         BbscFilterCondition filterCondition2 = new BbscFilterCondition(
             arr, fc.getRc().getStartRec(), fc.getRc().getEndRec(),
@@ -319,17 +328,17 @@ public class BbscController {
   }
 
   //쿼리스트링 카테고리(펫태그) 읽기, 없으면 ""반환
-  private String[] getCategory(Optional<String[]> category) {
-    String[] result = {};
-    if(category.isPresent()){
-      result = category.get();
-    }else{
-      String[] cate = category.orElse(new String[0]); // 값이 없는 경우 길이가 0인 배열 생성
-//      String[] emptyArray = new String[cate.length];
-      result = Arrays.stream(cate).map(x -> "").toArray(String[]::new); // 배열의 모든 요소를 빈 문자열("")로 초기화
-    }
-    log.info("category={}", result);
-    return result;
+  private List<String> getCategory(Optional<List<String>> category) {
+    List<String> cate = category.isPresent()? category.get(): null;
+    log.info("category={}",cate);
+//    if(category.isPresent()){
+//      result = category.get();
+//    }else{
+//      List<String> cate = category.orElse(null); // 값이 없는 경우 길이가 0인 배열 생성
+//////      String[] emptyArray = new String[cate.length];
+////      result = Arrays.stream(cate).map(x -> "").toArray(String[]::new); // 배열의 모든 요소를 빈 문자열("")로 초기화
+//    }
+    return cate;
   }
 
 }

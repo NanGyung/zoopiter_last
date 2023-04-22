@@ -257,7 +257,12 @@ p {
   font-weight: bold;
   padding: 5px 20px;
   border-radius: 10px;
-  border: 2px solid #f26d3d;
+  border: 2px solid #ffd65f;
+}
+
+.write-btn i{
+  font-size: 1.2rem;
+  color: var(--color-main-point)
 }
 
 /* 선택한 동물태그 */
