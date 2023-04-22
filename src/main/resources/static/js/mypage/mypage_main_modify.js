@@ -9,6 +9,23 @@ $(function () {
   $('#mypagePcGnb').children().eq(0).find('a').addClass('on');
 });
 
+// 회원 프로필 수정
+const inputImg = document.getElementById('chooseFile');
+
+const img_h = () => {
+    const file = inputImg.files[0];
+    const formData = new FormData();
+    formData.append('imageFiles', file);
+
+    fetch(`/api/mypage/memberedit`, {
+        method: 'POST',
+        body: formData
+    })
+    .catch(error => {
+        console.error(error);
+    });
+};
+
 //닉네임 저장
 const updateNick = res => {
   if (res.header.rtcd == '00') {
