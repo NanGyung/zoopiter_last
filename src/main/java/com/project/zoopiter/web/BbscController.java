@@ -303,7 +303,7 @@ public class BbscController {
       userNickList.add(bbsc.getUserNick());
     }
     for(String userNick : userNickList){
-      boolean existNick = memberSVC.isExistNick(userNick);
+     memberSVC.f(userNick);
       if(existNick == true){
 
       }
