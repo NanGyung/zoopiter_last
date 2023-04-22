@@ -14,11 +14,9 @@ public class BbscFilterCondition {
   private int startRec;         //시작레코드번호
   private int endRec;           //종료레코드번호
   private String searchType;    //검색유형: 조회수, 최신순
-//  private String keyword;       //검색어
 
   public BbscFilterCondition(List<String> category, String searchType) {
     this.category = category;
     this.searchType = searchType;
-//    this.keyword = keyword;
   }
 }

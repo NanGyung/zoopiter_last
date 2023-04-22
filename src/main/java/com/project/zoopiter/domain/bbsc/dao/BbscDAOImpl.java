@@ -102,7 +102,7 @@ public class BbscDAOImpl implements BbscDAO{
         sql.append("bc_udate ");
         sql.append("from bbsc ");
         sql.append("where pet_type in ( ");
-        sql = dynamicQuery(filterCondition,sql);
+        sql = dynamicQuery1(filterCondition,sql);
         sql.append(")t1 ");
         sql.append("where t1.no between :startRc and :endRc");
 
@@ -123,7 +123,7 @@ public class BbscDAOImpl implements BbscDAO{
   public List<Bbsc> findByPetType(BbscFilterCondition filterCondition) {
     StringBuffer sql = new StringBuffer();
     sql.append("select * from bbsc where pet_type in ( ");
-    sql = dynamicQuery(filterCondition, sql);
+    sql = dynamicQuery1(filterCondition, sql);
 
     List<Bbsc> list = null;
 
@@ -143,7 +143,7 @@ public class BbscDAOImpl implements BbscDAO{
   public List<Bbsc> findByFilter(BbscFilterCondition filterCondition) {
     StringBuffer sql = new StringBuffer();
     sql.append("select * from bbsc order by ");
-    sql = dynamicQuery(filterCondition, sql);
+    sql = dynamicQuery2(filterCondition, sql);
 
     List<Bbsc> list = null;
 
@@ -152,8 +152,9 @@ public class BbscDAOImpl implements BbscDAO{
     return list;
   }
 
-  private StringBuffer dynamicQuery(BbscFilterCondition filterCondition, StringBuffer sql){
+  private StringBuffer dynamicQuery1(BbscFilterCondition filterCondition, StringBuffer sql){
     List<String> petTypes = filterCondition.getCategory();
+
     if(petTypes.size() > 0){
       for(int i = 0; i < petTypes.size(); i++){
         sql.append(" '" + petTypes.get(i)  + "' ");
@@ -163,11 +164,14 @@ public class BbscDAOImpl implements BbscDAO{
       }
         sql.append(" ) ");
     }
+    return sql;
+  }
 
+  private StringBuffer dynamicQuery2(BbscFilterCondition filterCondition, StringBuffer sql){
     String searchType = filterCondition.getSearchType();
-    if(searchType == "bcHit"){
+    if("bcHit".equals(searchType)){
       sql.append("bc_hit desc ");
-    }else if(searchType == "bcUdate"){
+    }else if("bcUdate".equals(searchType)){
       sql.append("bc_udate desc ");
     }
     return sql;
@@ -269,7 +273,7 @@ public class BbscDAOImpl implements BbscDAO{
   public int totalCount(BbscFilterCondition filterCondition) {
     StringBuffer sql = new StringBuffer();
     sql.append("select count(*) from bbsc where pet_type in ( ");
-    sql = dynamicQuery(filterCondition, sql);
+    sql = dynamicQuery1(filterCondition, sql);
     SqlParameterSource param = new EmptySqlParameterSource();
     Integer cntOfFindedBypetType = template.queryForObject(sql.toString(), param, Integer.class);
 

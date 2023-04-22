@@ -24,29 +24,4 @@
 //
 //    }
 
-// 동물태그 적용버튼
-const $checkBtn = document.getElementById('checkBtn');
-// 동물 태그
-const $petTags = document.querySelectorAll('.petTag');
-// 조회방법 셀렉트박스
-const $searchType = document.getElementById('searchType');
-
-// 선택한 동물태그 값
- const result = [];
- for(const ele of $petTags){
-     if(ele.checked){
-        result.push(ele.value);
-     }
-        console.log(result);
- }
-
-
-// 조회방법 선택 시
-const search_f = e => {
-    const url = `/bbsc/list/1/${$searchType.value}?category=${result}`;
-    location.href = url;
-}
-
-$checkBtn.addEventListener('click', search_f, false);
-$searchType.addEventListener('change', search_f, false);
 

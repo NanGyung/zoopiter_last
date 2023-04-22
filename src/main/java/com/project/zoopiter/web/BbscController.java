@@ -196,46 +196,6 @@ public class BbscController {
   }
 
 
-
-  //목록
-//  @GetMapping("/list")
-//  public String findAll(
-//      Model model){
-//    List<Bbsc> bbscList = bbscSVC.findAll();
-//
-//      bbscList.stream().forEach(bbsc -> {
-//        BbscDetailForm bbscDetailForm = new BbscDetailForm();
-//        bbscDetailForm.setBcContent(bbsc.getBcContent());
-//        bbscDetailForm.setBcHit(bbsc.getBcHit());
-//        bbscDetailForm.setBcPublic(bbsc.getBcPublic());
-//        bbscDetailForm.setBcUdate(bbsc.getBcUdate());
-//      });
-//
-//    model.addAttribute("bbscList", bbscList);
-//    if(bbscList.size() == 0){
-//      throw new BizException("등록된 글이 없습니다!");
-//    }
-//
-//    // 게시글 id 값들 list에 저장
-//    List<Long> bbscIdList = new ArrayList<>();
-//    for (Bbsc bbsc : bbscList) {
-//      bbscIdList.add(bbsc.getBbscId());
-//    }
-//
-//    // key: 게시글 id value: 첨부파일 id로 맵에 저장
-//    Map<Long, Long> map = new LinkedHashMap<>();
-//    for (Long bbscId : bbscIdList) {
-//      List<UploadFile> imagedFiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F0102, bbscId);
-//      if (imagedFiles.size() > 0) {
-//        log.info("ImagedFiles={}", imagedFiles);
-//        map.put(bbscId,imagedFiles.get(0).getUploadfileId());
-//      }
-//    }
-//    model.addAttribute("imagedFileMap", map);
-//    log.info("imagedFileMap={}", map);
-//    return "board_com/com_main";
-//  }
-
   // 페이징 구현(목록)
   // searchType: 조회순, 최신순 category: 동물태그
   @GetMapping({"/list",
@@ -244,7 +204,7 @@ public class BbscController {
                 "/list/{reqPage}/{searchType}/"})
   public String listAndReqPage(
       @PathVariable(required = false) Optional<Integer> reqPage,
-      @PathVariable(required = false) Optional<String> searchType,
+      @RequestParam(required = false) Optional<String> searchType,
       @RequestParam(required = false) Optional<List<String>> category,
       Model model){
     log.info("/list 요청됨{},{},{}",reqPage,searchType,category);
@@ -256,12 +216,13 @@ public class BbscController {
     fc.setSearchType(searchType.orElse(""));  //검색유형(조회수,최신순)
 
     List<Bbsc> bbscList = null;
+    List<String> arr = null;
 
     // 게시물 목록 전체
-    if(!category.isPresent()){
-      List<String> arr = null;
-
-      if(searchType.isPresent()){ //검색어 있음(필터-최신,조회)
+    if(category.isPresent()){
+      if(searchType.isPresent()){ //검색어 있음(필터-최신,조회), 펫태그
+        arr = category.get();
+        log.info("searchType={}",searchType.get());
         BbscFilterCondition filterCondition = new BbscFilterCondition(
             arr, fc.getRc().getStartRec(), fc.getRc().getEndRec(),
             searchType.get()
@@ -271,24 +232,35 @@ public class BbscController {
         fc.setSearchType(searchType.get());
         bbscList = bbscSVC.findByFilter(filterCondition);
 
-      } else if (category.isPresent()) { //검색어 있음(펫태그)
-         arr = category.get();
+      }else{  // 펫태그 있고 셀렉트 박스 값 없을 때
+        arr = category.get();
 
         BbscFilterCondition filterCondition2 = new BbscFilterCondition(
             arr, fc.getRc().getStartRec(), fc.getRc().getEndRec(),
-            searchType.get()
+            ""
         );
 
         fc.setTotalRec(bbscSVC.totalCount(filterCondition2));
         fc.setCategory(category.get());
         bbscList = bbscSVC.findByPetType(filterCondition2);
 
-      }else{  //검색어 없음
-        // 총레코드수
-        fc.setTotalRec(bbscSVC.totalCount());
-        log.info("startRec={},endRec={}",fc.getRc().getStartRec(),fc.getRc().getEndRec());
-        bbscList = bbscSVC.findAll(fc.getRc().getStartRec(),fc.getRc().getEndRec());
       }
+    }else if(searchType.isPresent()){ // 펫태그 없고 셀렉트 박스 값만 있을때
+      List<String> emptyArr = new ArrayList<>();
+      emptyArr.add("");
+      BbscFilterCondition filterCondition = new BbscFilterCondition(
+          emptyArr, fc.getRc().getStartRec(), fc.getRc().getEndRec(),
+          searchType.get()
+      );
+
+      fc.setTotalRec(bbscSVC.totalCount(filterCondition));
+      fc.setSearchType(searchType.get());
+      bbscList = bbscSVC.findByFilter(filterCondition);
+    }else{  //검색어 없음
+      // 총레코드수
+      fc.setTotalRec(bbscSVC.totalCount());
+      log.info("startRec={},endRec={}",fc.getRc().getStartRec(),fc.getRc().getEndRec());
+      bbscList = bbscSVC.findAll(fc.getRc().getStartRec(),fc.getRc().getEndRec());
     }
 
     // ListForm에 게시글 저장
@@ -331,13 +303,6 @@ public class BbscController {
   private List<String> getCategory(Optional<List<String>> category) {
     List<String> cate = category.isPresent()? category.get(): null;
     log.info("category={}",cate);
-//    if(category.isPresent()){
-//      result = category.get();
-//    }else{
-//      List<String> cate = category.orElse(null); // 값이 없는 경우 길이가 0인 배열 생성
-//////      String[] emptyArray = new String[cate.length];
-////      result = Arrays.stream(cate).map(x -> "").toArray(String[]::new); // 배열의 모든 요소를 빈 문자열("")로 초기화
-//    }
     return cate;
   }
 

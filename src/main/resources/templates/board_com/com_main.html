@@ -31,19 +31,20 @@
     <div class="mn-l"></div>
     <main class="container">
       <!-- 메인 컨텐츠 -->
+    <form method="get" >
       <div class="main-list">
         <div class="list">
           <div class="main">커뮤니티</div>
-          <div class="selectBox">
-            <select class="select" id="searchType" th:field="${fc.searchType}">
-              <option value="bcHit">조회순</option>
-              <option value="bcUdate">최신순</option>
-              <option value="">좋아요</option>
-            </select>
-            <span class="icoArrow">
-              <i class="fa-solid fa-arrow-down"></i>
-            </span>
-          </div>
+              <div class="selectBox">
+                <select class="select" id="searchType" name="searchType" th:field="${fc.searchType}" >
+                  <option th:value="bcHit" name="searchType">조회순</option>
+                  <option th:value="bcUdate" name="searchType">최신순</option>
+    <!--              <option th:value="">좋아요</option>-->
+                </select>
+                <span class="icoArrow">
+                  <i class="fa-solid fa-arrow-down"></i>
+                </span>
+              </div>
         </div>
       </div>
 
@@ -52,20 +53,21 @@
           <!-- 동물 태그 선택 -->
           <div class="left">
             <div class="tag">동물태그</div>
-            <form th:field="${fc.category}" class="selectBox" name="pet">
-              <input type="checkbox" id="dog" class="petTag" name="pet" th:value="강아지">
+            <form th:field="${fc.category}" class="selectBox" id="categories" >
+              <input type="checkbox" id="dog" class="petTag" name="category" th:value="강아지">
               <label for="dog" >강아지</label>
-              <input type="checkbox" id="cat" class="petTag" name="pet" th:value="고양이">
+              <input type="checkbox" id="cat" class="petTag" name="category" th:value="고양이">
               <label for="cat">고양이</label>
-              <input type="checkbox"  id="small" class="petTag" name="pet" th:value="소동물">
+              <input type="checkbox"  id="small" class="petTag" name="category" th:value="소동물">
               <label for="small">소동물</label>
-              <input type="checkbox" id="other" class="petTag" name="pet" th:value="기타">
+              <input type="checkbox" id="other" class="petTag" name="category" th:value="기타">
               <label for="other" >기타</label>
-              <button id="checkBtn" type="button">적용</button>
+              <button id="checkBtn" type="submit">적용</button>
             </form>
           </div>
         </div>
       </div>
+    </form>
 
       <!-- 글쓰기버튼 -->
       <div class="write-btn-l"></div>
