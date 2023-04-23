@@ -161,13 +161,12 @@
               <div id="ccId" th:field="${reply.ccId}" th:text="${reply.ccId}" style="display: none;"></div>
               <!-- 댓글 프로필 -->
               <div class="comment__list-profile">
-                <div class="img" th:each="file : ${profiles}">
-                  <th:block th:if="${#strings.contains(file.ftype,'image')}">
-                    <img th:src="@{|/attach/view/${file.uploadfileId}|}">
-                  </th:block>
+                <div class="img">
+                  <!-- 프로필 있는 경우  -->
+                  <img th:if="${#maps.containsKey(profileMap, reply.userNick)}" th:src="@{|/attach/view/${profileMap[reply.userNick]}|}">
+                  <!-- 기본이미지 -->
+                  <img th:if="${not #maps.containsKey(profileMap, reply.userNick)}"th:src="@{'/img/img_profile1.png'}">
                 </div>
-                <!-- 기본 프로필 -->
-                <img th:unless="${profiles != null }" th:src="@{'/img/img_profile1.png'}"  alt="basicProfile">
                 <div th:text="${reply.userNick}" style="font-weight: bold;">닉네임</div>
               </div>
               <input th:value="${reply.ccContent}" id="originComment" readonly>

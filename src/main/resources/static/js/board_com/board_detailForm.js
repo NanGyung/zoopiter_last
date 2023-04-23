@@ -81,7 +81,7 @@ const del_h = e => {
             .error(console.error);
      }
 }
-$replyDelBtn.addEventListener('click', del_h, false);
+$replyDelBtn?.addEventListener('click', del_h, false);
 
 // 수정 삭제 버튼영역
 const commentBtns = document.querySelector('.comment__btn');
@@ -102,11 +102,11 @@ const updateSet_h = e => {
 }
 
 // 댓글 수정버튼 이벤트
-$updateBtn1.addEventListener('click', updateSet_h, false);
+$updateBtn1?.addEventListener('click', updateSet_h, false);
 
 // 수정 취소 버튼
 const $replyCancleBtn = document.getElementById('replyCancleBtn');
-$replyCancleBtn.addEventListener('click', e => {
+$replyCancleBtn?.addEventListener('click', e => {
     commentBtns.style.display = 'flex';
     updateBtns.style.display = 'none';
     $originComment.readOnly = true;
@@ -129,10 +129,10 @@ const update_h = e => {
 }
 
 // 댓글 확인버튼 이벤트
-$updateBtn2.addEventListener('click', update_h, false);
+$updateBtn2?.addEventListener('click', update_h, false);
 
 //댓글란이 읽기 전용이면 포커스 아웃라인 안보이게
-if($originComment.readOnly = true){
+if($originComment?.readOnly == true){
    $originComment.style.outline = 'none';
 }
 

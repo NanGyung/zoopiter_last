@@ -131,29 +131,33 @@ public class BbscController {
     List<BbscReply> findedReplies = bbscReplies.get();
     model.addAttribute("findedReplies",findedReplies);
     log.info("findedReplies={}",findedReplies);
+
     //회원프로필 조회
     // 댓글 회원닉네임들 list에 저장
     List<String> userNickList = new ArrayList<>();
+
     for(BbscReply bbscReply  : findedReplies){
       userNickList.add(bbscReply.getUserNick());
     }
-    log.info("userNickList={}",userNickList);
+
+    Map<String, Long> profileMap = new LinkedHashMap<>();
     for(String userNick : userNickList){
       // 댓글 닉네임으로 찾은 회원정보
       Optional<Member> byUserNick = memberSVC.findByUserNick(userNick);
       if(byUserNick.isPresent()){
         // 찾은 회원정보에서 프로필 id(userPhoto)값 가져오기
         Long userPhoto = byUserNick.get().getUserPhoto();
-        log.info("userPhoto={}",userPhoto);
+
         // userPhoto 값으로 프로필 사진 찾기
         List<UploadFile> profiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F0104, userPhoto);
 
         if(!profiles.isEmpty()){
-          model.addAttribute("profiles", profiles);
-          log.info("profiles={}",profiles);
+          profileMap.put(userNick,profiles.get(0).getUploadfileId());
         }
       }
     }
+
+    model.addAttribute("profileMap", profileMap);
 
     // 로그인한 회원의 프로필사진
     String userNick = null;
@@ -318,8 +322,6 @@ public class BbscController {
 
         partOfList.add(listForm);
       }
-//      log.info("partOfList={}",partOfList);
-
 
 
     // 게시글 id 값들 list에 저장
@@ -333,12 +335,10 @@ public class BbscController {
       for (Long bbscId : bbscIdList) {
         List<UploadFile> imagedFiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F0102, bbscId);
         if (imagedFiles.size() > 0) {
-//          log.info("ImagedFiles={}", imagedFiles);
           map.put(bbscId,imagedFiles.get(0).getUploadfileId());
         }
       }
       model.addAttribute("imagedFileMap", map);
-//      log.info("imagedFileMap={}", map);
 
     //회원프로필 조회
     // 게시글 회원닉네임들 list에 저장
@@ -347,20 +347,25 @@ public class BbscController {
       userNickList.add(bbsc.getUserNick());
     }
 
+    Map<String, Long> profileMap = new LinkedHashMap<>();
     for(String userNick : userNickList){
       // 게시글 닉네임으로 찾은 회원정보
       Optional<Member> byUserNick = memberSVC.findByUserNick(userNick);
       if(byUserNick.isPresent()){
         // 찾은 회원정보에서 프로필 id(userPhoto)값 가져오기
         Long userPhoto = byUserNick.get().getUserPhoto();
+
         // userPhoto 값으로 프로필 사진 찾기
         List<UploadFile> profiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F0104, userPhoto);
+        log.info("profiles={}",profiles);
 
         if(!profiles.isEmpty()){
-          model.addAttribute("profiles", profiles);
+          profileMap.put(userNick,profiles.get(0).getUploadfileId());
         }
       }
     }
+          model.addAttribute("profileMap", profileMap);
+
 
       model.addAttribute("list",partOfList);
       model.addAttribute("fc",fc);

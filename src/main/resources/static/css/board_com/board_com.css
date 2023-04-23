@@ -20,6 +20,14 @@ p {
 
 /* 메인 컨텐츠 */
 
+/* 좋아요 표시 */
+#likeBtn {
+    display: flex;
+}
+#likeBtn i {
+  margin-right: 10px;
+}
+
 .main-list {
   grid-area: main-list;
   width: 100%;
