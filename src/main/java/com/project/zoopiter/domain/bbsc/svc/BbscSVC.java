@@ -95,12 +95,27 @@ public interface BbscSVC {
   List<Bbsc> findAll();
   List<Bbsc> findAll(int startRec, int endRec);
   List<Bbsc> findAll(BbscFilterCondition filterCondition, int startRec, int endRec);
+
   /**
    * 조회수 증가
    * @param bbscId
    * @return
    */
   int increaseHit(Long bbscId);
+
+  /**
+   * 좋아요수 증가
+   * @param bbscId 게시글 번호
+   * @return
+   */
+  int increaseLikeCount(Long bbscId);
+
+  /**
+   * 좋아요수 감소
+   * @param bbscId 게시글 번호
+   * @return
+   */
+  int decreaseLikeCount(Long bbscId);
 
   /**
    * 전체건수

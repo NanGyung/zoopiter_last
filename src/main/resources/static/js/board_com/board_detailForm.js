@@ -11,6 +11,7 @@ const $updateBtn1 = document.getElementById('replyUpdateBtn1');
 // 댓글 수정 확인 버튼
 const $updateBtn2 = document.getElementById('replyUpdateBtn2');
 
+
 // 수정 화면으로 가기
 const $modifyBtn = document.getElementById('modifyBtn');
 
@@ -27,6 +28,7 @@ $delBtn?.addEventListener('click', e => {
     location.href = url;
   }
 });
+
 
 //댓글 등록버튼
 const $addBtn = document.getElementById('addBtn');
@@ -132,4 +134,46 @@ $updateBtn2.addEventListener('click', update_h, false);
 //댓글란이 읽기 전용이면 포커스 아웃라인 안보이게
 if($originComment.readOnly = true){
    $originComment.style.outline = 'none';
+}
+
+// 좋아요 버튼
+// 클릭 전 아이콘
+const $prevHeart = document.querySelectorAll('.like-icons .fa-regular');
+
+const increaseLike_h = e => {
+        console.log('increaseLike!');
+        const url = `/api/bbsc/${$bbscId.value}/like`;
+        ajax
+            .get(url)
+            .then(res => res.json())
+            .catch(console.error);
+        return;
+};
+
+const decreaseLike_h = e => {
+    console.log('deleteLike!');
+    const url = `/api/bbsc/${$bbscId.value}/like`;
+    ajax
+            .delete(url)
+            .then(res => res.json())
+            .catch(console.error);
+        return;
+};
+
+const heart_h = e => {
+    e.stopPropagation();
+    const target = e.target;
+    if (target.className == "fa-regular fa-heart") {
+        target.onclick = increaseLike_h;
+        target.classList.remove("fa-regular", "fa-heart");
+        target.classList.add("fa-solid", "fa-heart");
+    } else if (target.className == "fa-solid fa-heart") {
+        target.onclick = decreaseLike_h;
+        target.classList.remove("fa-solid", "fa-heart");
+        target.classList.add("fa-regular", "fa-heart");
+    }
+};
+
+for (const ele of $prevHeart) {
+    ele.addEventListener('click', heart_h, false);
 }

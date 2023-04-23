@@ -111,12 +111,14 @@
                     조회수
                     <p th:text = "${Bbsc.bcHit}">0</p>
                   </div>
-                  <div class="like-icons" id="likeBtn">
-                    <!--  좋아요 누르기 전 아이콘 -->
-                    <i class="fa-regular fa-heart"></i>
-                    <!-- 좋아요 누른 후 아이콘 -->
-                    <!-- <i class="fa-solid fa-heart"></i> -->
-                  </div>
+<!--                  <form action="" method="get">-->
+                    <div class="like-icons" id="likeBtn">
+                      <!--  좋아요 누르기 전 아이콘 -->
+                      <i class="fa-regular fa-heart"></i>
+                      <!-- 좋아요 누른 후 아이콘 -->
+                      <!-- <i class="fa-solid fa-heart"></i> -->
+                    </div>
+<!--                  </form>-->
                 </div>
                 <div class="tag" th:if="${not #strings.isEmpty(Bbsc.petType)}" th:text="${Bbsc.petType}">#강아지</div>
               </div>
@@ -204,7 +206,7 @@
   <!-- 펫 태그 체크박스 이벤트  -->
   <script src="/js/board/board_checkPet.js"></script>
   <!-- 게시글 목록 -->
-  <script src="/js/board_com/board_list.js"></script>
+<!--  <script src="/js/board_com/board_list.js" type="module"></script>-->
 </body>
 
 </html>

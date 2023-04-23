@@ -278,6 +278,42 @@ public class BbscDAOImpl implements BbscDAO{
   }
 
   /**
+   * 좋아요수 증가
+   *
+   * @param id 게시글 번호
+   * @return
+   */
+  @Override
+  public int increaseLikeCount(Long id) {
+    StringBuffer sql = new StringBuffer();
+    sql.append("update bbsc  ");
+    sql.append("set bc_like = bc_like + 1 ");
+    sql.append("where bbsc_id = :bbscId ");
+
+    Map<String, Long> param = Map.of("bbscId", id);
+
+    return template.update(sql.toString(), param);
+  }
+
+  /**
+   * 좋아요수 감소
+   *
+   * @param id 게시글 번호
+   * @return
+   */
+  @Override
+  public int decreaseLikeCount(Long id) {
+    StringBuffer sql = new StringBuffer();
+    sql.append("update bbsc  ");
+    sql.append("set bc_like = bc_like - 1 ");
+    sql.append("where bbsc_id = :bbscId ");
+
+    Map<String, Long> param = Map.of("bbscId", id);
+
+    return template.update(sql.toString(), param);
+  }
+
+  /**
    * 전체건수
    *
    * @return 게시글 전체건수

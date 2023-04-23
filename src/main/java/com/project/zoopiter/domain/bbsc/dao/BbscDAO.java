@@ -73,6 +73,20 @@ public interface BbscDAO {
   int increaseHitCount(Long id);
 
   /**
+   * 좋아요수 증가
+   * @param id 게시글 번호
+   * @return
+   */
+  int increaseLikeCount(Long id);
+
+  /**
+   * 좋아요수 감소
+   * @param id 게시글 번호
+   * @return
+   */
+  int decreaseLikeCount(Long id);
+
+  /**
    * 전체건수
    * @return 게시글 전체건수
    */
