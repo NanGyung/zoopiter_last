@@ -100,7 +100,8 @@ public class BbscController {
   @GetMapping("/{bbscId}/detail")
   public String findById(
       @PathVariable("bbscId") Long bbscId,
-      Model model
+      Model model,
+      HttpServletRequest request
   ){
     Optional<Bbsc> findedWrite = bbscSVC.findById(bbscId);
     Bbsc bbsc = findedWrite.orElseThrow();
@@ -129,6 +130,46 @@ public class BbscController {
     Optional<List<BbscReply>> bbscReplies = bbscReplySVC.findByBbscId(bbscId);
     List<BbscReply> findedReplies = bbscReplies.get();
     model.addAttribute("findedReplies",findedReplies);
+
+    //회원프로필 조회
+    // 댓글 회원닉네임들 list에 저장
+    List<String> userNickList = new ArrayList<>();
+    for(BbscReply bbscReply  : findedReplies){
+      userNickList.add(bbscReply.getUserNick());
+    }
+
+    for(String userNick : userNickList){
+      // 댓글 닉네임으로 찾은 회원정보
+      Optional<Member> byUserNick = memberSVC.findByUserNick(userNick);
+      if(byUserNick.isPresent()){
+        // 찾은 회원정보에서 프로필 id(userPhoto)값 가져오기
+        Long userPhoto = byUserNick.get().getUserPhoto();
+        // userPhoto 값으로 프로필 사진 찾기
+        List<UploadFile> profiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F0104, userPhoto);
+
+        if(!profiles.isEmpty()){
+          model.addAttribute("profiles", profiles);
+        }
+      }
+    }
+
+    // 로그인한 회원의 프로필사진
+    String userNick = null;
+    HttpSession session = request.getSession(false);
+    if(session != null) {
+      LoginMember loginMember = (LoginMember)session.getAttribute(SessionConst.LOGIN_MEMBER);
+      userNick = loginMember.getUserNick();
+
+      Optional<Member> findByUserNick = memberSVC.findByUserNick(userNick);
+      Long userPhoto = findByUserNick.get().getUserPhoto();
+
+      List<UploadFile> loginProfiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F0104, userPhoto);
+      if(!loginProfiles.isEmpty()){
+        model.addAttribute("loginProfiles",loginProfiles);
+      }
+    }else{
+      return "redirect:/login";
+    }
 
     model.addAttribute("bbscDetailForm",bbscDetailForm);
     return "board_com/com_detailForm";

@@ -340,6 +340,25 @@ p {
   margin: 0;
   border: 0;
 }
+
+.main-comment .input .main-comment__write .profiles {
+    display: flex;
+    align-items: center;
+}
+
+.main-comment .input .main-comment__write .profiles .img {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+}
+
+.main-comment .input .main-comment__write .profiles .img img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+
 .main-comment .input .btn1 {
   display: flex;
   justify-content: flex-end;
@@ -418,6 +437,24 @@ p {
  display: flex;
  flex-direction: column;
  flex: 8;
+}
+
+/* 댓글 목록 프로필 */
+.comment__list-profile {
+   display: flex;
+   align-items: center;
+}
+
+.comment__list-profile .img {
+  width: 60px;
+  height: 60px;
+  margin-right: 10px;
+}
+
+.comment__list-profile .img img {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 .comment__list .right{
